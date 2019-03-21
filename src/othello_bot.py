@@ -12,7 +12,7 @@ try:
 except ImportError:
     GRAPH = False
 
-SELF_PLAY = True
+SELF_PLAY = False
 
 current_limit = 64
 
@@ -34,14 +34,22 @@ while not b.is_game_over():
         depth = 1
         t = 0
         start_time = time.time()
-        move, value = bot.best_move(depth)
-        # while True:
+
+        pv, value = bot.best_move(depth)
+        move = pv[0]
+        pv = " ".join(tuple(map(lambda m: engine.BITBOARD_TO_COORD[m], pv)))
+
         while t < DIFFICULTY and len(b.legal_moves()) > 1 and depth <= b.empty_spaces():
-            move, value = bot.best_move(depth)
-            print(f"info bestmove {engine.BITBOARD_TO_COORD[move]} depth {depth} " +
+            pv, value = bot.best_move(depth)
+
+            move = pv[0]
+            pv = " ".join(tuple(map(lambda m: engine.BITBOARD_TO_COORD[m], pv)))
+
+            print(f"info depth {depth} " +
                   f"time {int(1000 * (time.time() - start_time))} " +
                   f"nodes {bot.searched_nodes} " +
-                  f"nps {int(bot.searched_nodes / (max(0.1, t)))} score {value} ")
+                  f"nps {int(bot.searched_nodes / (max(0.1, t)))} score {value} " +
+                  f"pv {pv}")
 
             depth += 1
             t = time.time() - start_time

@@ -44,7 +44,7 @@ def evaluate(board_object):
         if black_score > white_score:
             return engine.INFINITY - (board.BOARD_ARRAY_SIZE - white_score)
         elif black_score < white_score:
-            return -engine.INFINITY - (board.BOARD_ARRAY_SIZE - black_score)
+            return -engine.INFINITY + (board.BOARD_ARRAY_SIZE - black_score)
         else:
             return 0
 

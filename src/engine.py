@@ -22,9 +22,6 @@ class Engine:
         self.board = board_object
         self.evaluator = evaluator
 
-        self.previous_moves = self.board.legal_moves()
-        self.last_search_position = self.board.get_board()
-
         self.TRANSPOSITION_TABLE = {}
         self.searched_nodes = 0
 
@@ -33,11 +30,11 @@ class Engine:
 
         if depth == 0:
             try:
-                evaluation = self.TRANSPOSITION_TABLE[board_key]
+                evaluation, _ = self.TRANSPOSITION_TABLE[board_key]
             except KeyError:
                 evaluation = self.evaluator(board_object)
-                self.TRANSPOSITION_TABLE[board_key] = evaluation
-            return color * evaluation
+                self.TRANSPOSITION_TABLE[board_key] = evaluation, []
+            return color * evaluation, []
 
         try:
             return self.TRANSPOSITION_TABLE[board_key]
@@ -49,42 +46,30 @@ class Engine:
                 self.searched_nodes += 1
 
                 board_object.move(move)
-                value = max(value, -self.negamax(board_object, depth - 1, -beta, -alpha, -color))
+                move_value, move_pv = self.negamax(board_object, depth - 1, -beta, -alpha, -color)
+                value = max(value, -move_value)
                 board_object.pop()
+
+                if -move_value == value:
+                    best_move = move
+                    best_pv = move_pv
 
                 alpha = max(alpha, value)
                 if alpha >= beta:
                     break
 
-            self.TRANSPOSITION_TABLE[board_key] = value
-            return value
+            pv = [best_move] + best_pv
+            self.TRANSPOSITION_TABLE[board_key] = value, pv
+            return value, pv
 
     def best_move(self, depth):
         self.TRANSPOSITION_TABLE = {}
         self.searched_nodes = 0
 
-        turn_factor = -1 if self.board.side == board.BLACK else 1
+        turn_factor = 1 if self.board.side == board.BLACK else -1
+        evaluation, pv = self.negamax(self.board, depth, -INFINITY, INFINITY, turn_factor)
 
-        moves = {}
-
-        if self.board.get_board() == self.last_search_position:
-            legal_moves = self.previous_moves
-        else:
-            legal_moves = sorted(self.board.legal_moves(), key=lambda m: m in CORNERS, reverse=True)
-
-        alpha = -INFINITY
-        for move in legal_moves:
-            self.board.move(move)
-            moves[move] = -self.negamax(self.board, depth - 1, -INFINITY, -alpha, turn_factor)
-            self.board.pop()
-
-            alpha = max(alpha, moves[move])
-
-        best_moves = sorted(moves, key=lambda k: moves[k], reverse=True)
-        self.previous_moves = best_moves
-        self.last_search_position = self.board.get_board()
-
-        return best_moves[0], moves[best_moves[0]]
+        return pv, evaluation
 
 
 if __name__ == "__main__":
