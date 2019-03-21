@@ -1,0 +1,8 @@
+
+dist/
+
+\.idea/
+
+othello_bot\.bat
+
+src/__pycache__/
