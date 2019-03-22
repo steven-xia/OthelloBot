@@ -23,16 +23,17 @@ class Engine:
         self.board = board_object
         self.evaluator = evaluator
 
-        self.previous_search_position = board_object.get_board()
-        self.previous_principal_variation = ()
-
+        self.PREVIOUS_MOVES_TRANSPOSITION = {}
+        self.MOVES_TRANSPOSITION = {}
         self.TRANSPOSITION_TABLE = {}
         self.searched_nodes = 0
 
-    def negamax(self, board_object, depth, alpha, beta, color, pv=()):
+    def negamax(self, board_object, depth, alpha, beta, color):
         board_key = board_object.get_board()
 
         if depth == 0:
+            self.searched_nodes += 1
+
             try:
                 evaluation, _ = self.TRANSPOSITION_TABLE[board_key]
             except KeyError:
@@ -45,19 +46,22 @@ class Engine:
         except KeyError:
             legal_moves = sorted(board_object.legal_moves(), key=lambda m: m in CORNERS, reverse=True)
 
-            if pv != ():
-                legal_moves = sorted(legal_moves, key=lambda m: m != pv[0])
-            else:
-                pv = (0, )
+            def map_function(m):
+                try:
+                    return self.PREVIOUS_MOVES_TRANSPOSITION[board_key][m]
+                except KeyError:
+                    return -INFINITY
+
+            legal_moves = sorted(legal_moves, key=map_function, reverse=True)
 
             value = -INFINITY
+            moves_dictionary = {}
             for move in legal_moves:
-                self.searched_nodes += 1
-
                 board_object.move(move)
-                move_value, move_pv = self.negamax(board_object, depth - 1, -beta, -alpha, -color, pv[1:])
+                move_value, move_pv = self.negamax(board_object, depth - 1, -beta, -alpha, -color)
                 board_object.pop()
 
+                moves_dictionary[move] = -move_value
                 if -move_value > value:
                     value = -move_value
                     best_move = move
@@ -68,22 +72,18 @@ class Engine:
                         break
 
             pv = (best_move, ) + best_pv
+            self.MOVES_TRANSPOSITION[board_key] = moves_dictionary
             self.TRANSPOSITION_TABLE[board_key] = value, pv
             return value, pv
 
     def best_move(self, depth):
+        self.PREVIOUS_MOVES_TRANSPOSITION = self.MOVES_TRANSPOSITION
+        self.MOVES_TRANSPOSITION = {}
         self.TRANSPOSITION_TABLE = {}
         self.searched_nodes = 0
 
-        if self.board.get_board() != self.previous_search_position:
-            self.previous_principal_variation = ()
-
         turn_factor = 1 if self.board.side == board.BLACK else -1
-        evaluation, pv = self.negamax(self.board, depth, -INFINITY, INFINITY, turn_factor,
-                                      self.previous_principal_variation)
-
-        self.previous_search_position = self.board.get_board()
-        self.previous_principal_variation = pv
+        evaluation, pv = self.negamax(self.board, depth, -INFINITY, INFINITY, turn_factor)
 
         return pv, evaluation
 

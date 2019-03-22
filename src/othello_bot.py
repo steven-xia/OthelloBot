@@ -6,7 +6,7 @@ import board
 
 
 try:
-    from matplotlib import pyplot as pylab
+    # from matplotlib import pyplot as pylab
 
     GRAPH = False
 except ImportError:
@@ -16,8 +16,9 @@ SELF_PLAY = False
 
 current_limit = 64
 
-# DIFFICULTY = int(input("Enter difficulty (1 - 10): ")) ** 10 / 10
-DIFFICULTY = 2
+DIFFICULTY = int(input("Enter difficulty (1 - 10): ")) ** 2 / 10
+print(f"Time per move set at {round(DIFFICULTY, 2)} seconds.")
+# DIFFICULTY = 2
 
 b = board.Board()
 bot = engine.Engine(b, evaluator.evaluate)
