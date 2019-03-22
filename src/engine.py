@@ -28,7 +28,7 @@ class Engine:
         self.TRANSPOSITION_TABLE = {}
         self.searched_nodes = 0
 
-    def negamax(self, board_object, depth, alpha, beta, color):
+    def principal_variation_search(self, board_object, depth, alpha, beta, color):
         board_key = board_object.get_board()
 
         if depth == 0:
@@ -56,10 +56,23 @@ class Engine:
 
             value = -INFINITY
             moves_dictionary = {}
-            for move in legal_moves:
-                board_object.move(move)
-                move_value, move_pv = self.negamax(board_object, depth - 1, -beta, -alpha, -color)
-                board_object.pop()
+            for move_index, move in enumerate(legal_moves):
+                if move_index == 0:
+                    board_object.move(move)
+                    move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -beta, -alpha,
+                                                                          -color)
+                    board_object.pop()
+                else:
+                    board_object.move(move)
+                    move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -alpha - 1, -alpha,
+                                                                          -color)
+                    board_object.pop()
+
+                    if alpha < -move_value < beta:
+                        board_object.move(move)
+                        move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -beta, -alpha,
+                                                                              -color)
+                        board_object.pop()
 
                 moves_dictionary[move] = -move_value
                 if -move_value > value:
@@ -83,7 +96,7 @@ class Engine:
         self.searched_nodes = 0
 
         turn_factor = 1 if self.board.side == board.BLACK else -1
-        evaluation, pv = self.negamax(self.board, depth, -INFINITY, INFINITY, turn_factor)
+        evaluation, pv = self.principal_variation_search(self.board, depth, -INFINITY, INFINITY, turn_factor)
 
         return pv, evaluation
 
