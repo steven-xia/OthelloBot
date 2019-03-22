@@ -143,49 +143,49 @@ class Board:
         moves = 0
 
         # moving up ...
-        temporary_bitboard = (to_move_board >> BOARD_SIZE) & opponent_board
+        temporary_bitboard = (to_move_board >> BOARD_SIZE) & opponent_board & BOTTOM_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard >> BOARD_SIZE) & empties & BOTTOM_EDGE
             temporary_bitboard = (temporary_bitboard >> BOARD_SIZE) & opponent_board & BOTTOM_EDGE
 
         # moving down ...
-        temporary_bitboard = (to_move_board << BOARD_SIZE) & opponent_board
+        temporary_bitboard = (to_move_board << BOARD_SIZE) & opponent_board & TOP_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard << BOARD_SIZE) & empties & TOP_EDGE
             temporary_bitboard = (temporary_bitboard << BOARD_SIZE) & opponent_board & TOP_EDGE
 
         # moving left ...
-        temporary_bitboard = (to_move_board >> 1) & opponent_board
+        temporary_bitboard = (to_move_board >> 1) & opponent_board & RIGHT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard >> 1) & empties & RIGHT_EDGE
             temporary_bitboard = (temporary_bitboard >> 1) & opponent_board & RIGHT_EDGE
 
         # moving right ...
-        temporary_bitboard = (to_move_board << 1) & opponent_board
+        temporary_bitboard = (to_move_board << 1) & opponent_board & LEFT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard << 1) & empties & LEFT_EDGE
             temporary_bitboard = (temporary_bitboard << 1) & opponent_board & LEFT_EDGE
 
         # moving up left ...
-        temporary_bitboard = (to_move_board >> DIAGONAL_MORE) & opponent_board
+        temporary_bitboard = (to_move_board >> DIAGONAL_MORE) & opponent_board & BOTTOM_RIGHT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard >> DIAGONAL_MORE) & empties & BOTTOM_RIGHT_EDGE
             temporary_bitboard = (temporary_bitboard >> DIAGONAL_MORE) & opponent_board & BOTTOM_RIGHT_EDGE
 
         # moving up right ...
-        temporary_bitboard = (to_move_board >> DIAGONAL_LESS) & opponent_board
+        temporary_bitboard = (to_move_board >> DIAGONAL_LESS) & opponent_board & BOTTOM_LEFT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard >> DIAGONAL_LESS) & empties & BOTTOM_LEFT_EDGE
             temporary_bitboard = (temporary_bitboard >> DIAGONAL_LESS) & opponent_board & BOTTOM_LEFT_EDGE
 
         # moving down left ...
-        temporary_bitboard = (to_move_board << DIAGONAL_LESS) & opponent_board
+        temporary_bitboard = (to_move_board << DIAGONAL_LESS) & opponent_board & TOP_RIGHT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard << DIAGONAL_LESS) & empties & TOP_RIGHT_EDGE
             temporary_bitboard = (temporary_bitboard << DIAGONAL_LESS) & opponent_board & TOP_RIGHT_EDGE
 
         # moving down right ...
-        temporary_bitboard = (to_move_board << DIAGONAL_MORE) & opponent_board
+        temporary_bitboard = (to_move_board << DIAGONAL_MORE) & opponent_board & TOP_LEFT_EDGE
         while temporary_bitboard:
             moves |= (temporary_bitboard << DIAGONAL_MORE) & empties & TOP_LEFT_EDGE
             temporary_bitboard = (temporary_bitboard << DIAGONAL_MORE) & opponent_board & TOP_LEFT_EDGE
