@@ -57,26 +57,23 @@ class Engine:
             value = -INFINITY
             moves_dictionary = {}
             for move_index, move in enumerate(legal_moves):
+                board_object.move(move)
                 if move_index == 0:
-                    board_object.move(move)
                     move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -beta, -alpha,
                                                                           -color)
-                    board_object.pop()
+                    move_value = -move_value
                 else:
-                    board_object.move(move)
-                    move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -alpha - 1, -alpha,
+                    move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -(alpha + 1), -alpha,
                                                                           -color)
-                    board_object.pop()
-
                     if alpha < -move_value < beta:
-                        board_object.move(move)
                         move_value, move_pv = self.principal_variation_search(board_object, depth - 1, -beta, -alpha,
                                                                               -color)
-                        board_object.pop()
+                    move_value = -move_value
+                board_object.pop()
 
-                moves_dictionary[move] = -move_value
-                if -move_value > value:
-                    value = -move_value
+                moves_dictionary[move] = move_value
+                if move_value > value:
+                    value = move_value
                     best_move = move
                     best_pv = move_pv
 

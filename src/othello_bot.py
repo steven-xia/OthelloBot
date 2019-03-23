@@ -40,7 +40,7 @@ while not b.is_game_over():
         move = pv[0]
         pv = " ".join(tuple(map(lambda m: engine.BITBOARD_TO_COORD[m], pv)))
 
-        while t < DIFFICULTY and len(b.legal_moves()) > 1 and depth <= b.empty_spaces():
+        while t < DIFFICULTY and len(b.legal_moves()) > 1 and depth <= 2 * b.empty_spaces():
             pv, value = bot.best_move(depth)
 
             move = pv[0]
