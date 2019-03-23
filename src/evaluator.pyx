@@ -15,8 +15,133 @@ SCORE_TABLE = (
     99, -8, 8, 6, 6, 8, -8, 99,
 )
 
-cpdef int get_frontier_score(const unsigned long long black_bitboard, const unsigned long long white_bitboard):
-    cdef unsigned long long pieces = black_bitboard | white_bitboard
+
+SQUARE1 = (
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+)
+
+SQUARE2 = (
+    0, 1, 0, 0, 0, 0, 1, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1, 0,
+)
+
+SQUARE3 = (
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+)
+
+SQUARE4 = (
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+)
+
+SQUARE5 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE6 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE7 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE8 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE9 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE10 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SCORE_TUPLE = (
+    (board.bitboard(SQUARE1),  99),
+    (board.bitboard(SQUARE2),  -8),
+    (board.bitboard(SQUARE3),   8),
+    (board.bitboard(SQUARE4),   6),
+    (board.bitboard(SQUARE5), -24),
+    (board.bitboard(SQUARE6),  -4),
+    (board.bitboard(SQUARE7),  -3),
+    (board.bitboard(SQUARE8),   7),
+    (board.bitboard(SQUARE9),   4),
+    (board.bitboard(SQUARE10),  0)
+)
+
+
+def get_frontier_score(black_bitboard, white_bitboard):
+    pieces = black_bitboard | white_bitboard
 
     cool_thing = ((pieces >> board.BOARD_SIZE) | ~board.BOTTOM_EDGE) & \
                  ((pieces << board.BOARD_SIZE) | ~board.TOP_EDGE) & \
@@ -35,6 +160,7 @@ cpdef int get_frontier_score(const unsigned long long black_bitboard, const unsi
 
     return board.popcount(white_frontier) - board.popcount(black_frontier)
 
+
 def evaluate(board_object):
     cdef int black_score, white_score
     black_score, white_score = board_object.score()
@@ -49,11 +175,12 @@ def evaluate(board_object):
             return 0
 
     # get the piece scores
-    black_board_array = board.board_array(board_object.bitboard_black)
-    white_board_array = board.board_array(board_object.bitboard_white)
-
-    cdef int piece_score = sum(x * SCORE_TABLE[i] for i, x in enumerate(black_board_array)) - \
-                           sum(x * SCORE_TABLE[i] for i, x in enumerate(white_board_array))
+    cdef unsigned long long bitboard
+    cdef int score
+    cdef int piece_score = 0
+    for bitboard, score in SCORE_TUPLE:
+        piece_score += score * board.popcount(board_object.bitboard_black & bitboard)
+        piece_score -= score * board.popcount(board_object.bitboard_white & bitboard)
 
     # get the mobility score
     cdef int mobility_score = len(board_object.legal_moves()) - len(board_object.legal_moves(opponent=True))

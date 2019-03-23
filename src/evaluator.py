@@ -1,5 +1,5 @@
-import engine
 import board
+import engine
 
 MOBILITY_FACTOR = 3
 FRONTIER_FACTOR = 7
@@ -16,17 +16,141 @@ SCORE_TABLE = (
 )
 
 
+SQUARE1 = (
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+)
+
+SQUARE2 = (
+    0, 1, 0, 0, 0, 0, 1, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1, 0,
+)
+
+SQUARE3 = (
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+)
+
+SQUARE4 = (
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+)
+
+SQUARE5 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE6 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE7 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 1, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE8 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE9 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SQUARE10 = (
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+)
+
+SCORE_TUPLE = (
+    (board.bitboard(SQUARE1),  99),
+    (board.bitboard(SQUARE2),  -8),
+    (board.bitboard(SQUARE3),   8),
+    (board.bitboard(SQUARE4),   6),
+    (board.bitboard(SQUARE5), -24),
+    (board.bitboard(SQUARE6),  -4),
+    (board.bitboard(SQUARE7),  -3),
+    (board.bitboard(SQUARE8),   7),
+    (board.bitboard(SQUARE9),   4),
+    (board.bitboard(SQUARE10),  0)
+)
+
+
 def get_frontier_score(black_bitboard, white_bitboard):
     pieces = black_bitboard | white_bitboard
 
     cool_thing = ((pieces >> board.BOARD_SIZE) | ~board.BOTTOM_EDGE) & \
-                     ((pieces << board.BOARD_SIZE) | ~board.TOP_EDGE) & \
-                     ((pieces >> 1) | ~board.RIGHT_EDGE) & \
-                     ((pieces << 1) | ~board.LEFT_EDGE) & \
-                     ((pieces >> board.DIAGONAL_MORE) | ~board.BOTTOM_RIGHT_EDGE) & \
-                     ((pieces >> board.DIAGONAL_LESS) | ~board.BOTTOM_LEFT_EDGE) & \
-                     ((pieces << board.DIAGONAL_MORE) | ~board.TOP_LEFT_EDGE) & \
-                     ((pieces << board.DIAGONAL_LESS) | ~board.TOP_RIGHT_EDGE)
+                 ((pieces << board.BOARD_SIZE) | ~board.TOP_EDGE) & \
+                 ((pieces >> 1) | ~board.RIGHT_EDGE) & \
+                 ((pieces << 1) | ~board.LEFT_EDGE) & \
+                 ((pieces >> board.DIAGONAL_MORE) | ~board.BOTTOM_RIGHT_EDGE) & \
+                 ((pieces >> board.DIAGONAL_LESS) | ~board.BOTTOM_LEFT_EDGE) & \
+                 ((pieces << board.DIAGONAL_MORE) | ~board.TOP_LEFT_EDGE) & \
+                 ((pieces << board.DIAGONAL_LESS) | ~board.TOP_RIGHT_EDGE)
 
     black_interior = black_bitboard & cool_thing
     white_interior = white_bitboard & cool_thing
@@ -50,11 +174,10 @@ def evaluate(board_object):
             return 0
 
     # get the piece scores
-    black_board_array = board.board_array(board_object.bitboard_black)
-    white_board_array = board.board_array(board_object.bitboard_white)
-
-    piece_score = sum(x * SCORE_TABLE[i] for i, x in enumerate(black_board_array)) - \
-                  sum(x * SCORE_TABLE[i] for i, x in enumerate(white_board_array))
+    piece_score = 0
+    for bitboard, score in SCORE_TUPLE:
+        piece_score += score * board.popcount(board_object.bitboard_black & bitboard)
+        piece_score -= score * board.popcount(board_object.bitboard_white & bitboard)
 
     # get the mobility score
     mobility_score = len(board_object.legal_moves()) - len(board_object.legal_moves(opponent=True))
