@@ -83,7 +83,7 @@ if __name__ == "__main__":
     x = tensorflow.keras.layers.Flatten()(x)
     x = tensorflow.keras.layers.Concatenate()([x, extra_input])
 
-    x = tensorflow.keras.layers.Dense(units=256, activation=tensorflow.keras.activations.relu, use_bias=True,
+    x = tensorflow.keras.layers.Dense(units=64, activation=tensorflow.keras.activations.relu, use_bias=True,
                                       kernel_initializer="glorot_normal")(x)
     x = tensorflow.keras.layers.BatchNormalization()(x)
     x = tensorflow.keras.layers.Dropout(0.5)(x)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         validation_split=0.01,
         batch_size=256,
         callbacks=[
-            tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=0,
+            tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=1,
                                                          mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),
             tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=4, verbose=1,
                                                      mode='auto', baseline=None, restore_best_weights=True)
