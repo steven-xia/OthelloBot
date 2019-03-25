@@ -63,6 +63,7 @@ if __name__ == "__main__":
                                        activation=tensorflow.keras.activations.relu, use_bias=True,
                                        kernel_initializer="glorot_normal")(x)
     x = tensorflow.keras.layers.BatchNormalization()(x)
+    x = tensorflow.keras.layers.Dropout(0.5)(x)
 
     x = tensorflow.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), strides=(1, 1), padding="same",
                                        activation=tensorflow.keras.activations.relu, use_bias=True,
@@ -78,6 +79,7 @@ if __name__ == "__main__":
                                        activation=tensorflow.keras.activations.relu, use_bias=True,
                                        kernel_initializer="glorot_normal")(x)
     x = tensorflow.keras.layers.BatchNormalization()(x)
+    x = tensorflow.keras.layers.Dropout(0.5)(x)
 
     x = tensorflow.keras.layers.Flatten()(x)
     x = tensorflow.keras.layers.Concatenate()([x, extra_input])
@@ -85,13 +87,15 @@ if __name__ == "__main__":
     x = tensorflow.keras.layers.Dense(units=64, activation=tensorflow.keras.activations.relu, use_bias=True,
                                       kernel_initializer="glorot_normal")(x)
     x = tensorflow.keras.layers.BatchNormalization()(x)
+    x = tensorflow.keras.layers.Dropout(0.5)(x)
 
     x = tensorflow.keras.layers.Dense(units=64, activation=tensorflow.keras.activations.relu, use_bias=True,
                                       kernel_initializer="glorot_normal")(x)
     x = tensorflow.keras.layers.BatchNormalization()(x)
+    x = tensorflow.keras.layers.Dropout(0.5)(x)
 
-    network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.relu, use_bias=True,
-                                                   kernel_initializer="glorot_normal")(x)
+    network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.sigmoid,
+                                                   use_bias=True, kernel_initializer="glorot_normal")(x)
 
     network = tensorflow.keras.models.Model(inputs=[board_input, extra_input], outputs=network_output)
     network.compile(
