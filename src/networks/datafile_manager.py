@@ -25,14 +25,18 @@ def load_data(filename):
 
 
 if __name__ == "__main__":
-    print("Loading data... ")
-    d = load_data("training_data.txt")
+    LOAD_FILE = "training_data.txt"
+    SAVE_FILE = "training_data_clipped.txt"
+    OUTPUT_SIZE = 1280000
+
+    print(f"Loading data from {LOAD_FILE}... ")
+    d = load_data(LOAD_FILE)
 
     print(f"There are currently {len(d)} training samples.")
 
-    output_keys = tuple(d.keys())[:1280000]
+    output_keys = tuple(d.keys())[:OUTPUT_SIZE]
     output_dict = {k: d[k] for k in output_keys}
-    print(f"Now there are {len(output_dict)} training samples.")
+    print(f"Choosing first {len(output_dict)} training samples.")
 
-    print("Saving data... ")
-    save_data(output_dict, "training_data_clipped.txt")
+    print(f"Saving new data in {SAVE_FILE}... ")
+    save_data(output_dict, SAVE_FILE)

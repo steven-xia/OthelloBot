@@ -6,3 +6,5 @@ dist/
 othello_bot\.bat
 
 src/__pycache__/
+
+src/networks/__pycache__/
