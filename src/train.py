@@ -15,7 +15,6 @@ def shifted_leaky_relu(x):
 ACTIVATION_FUNCTION = shifted_leaky_relu
 DATA_FILE = "networks/training_data.txt"
 
-
 if __name__ == "__main__":
     import multiprocessing
 
@@ -45,7 +44,7 @@ if __name__ == "__main__":
     # TRAINING BELOW ---------------------------------------------------------------------------------------------------
 
     board_input = tensorflow.keras.layers.Input(shape=(8, 8, 2))
-    extra_input = tensorflow.keras.layers.Input(shape=(2, ))
+    extra_input = tensorflow.keras.layers.Input(shape=(2,))
 
     x = board_input
 
@@ -108,8 +107,14 @@ if __name__ == "__main__":
     network.fit(
         x=[training_board_inputs, training_extra_inputs],
         y=training_outputs,
-        epochs=10,
+        epochs=32,
         validation_split=0.01,
         batch_size=256,
+        callbacks=[
+            tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=0,
+                                                         mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),
+            tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=4, verbose=1,
+                                                     mode='auto', baseline=None, restore_best_weights=True)
+        ],
         verbose=True
     )
