@@ -94,7 +94,7 @@ if __name__ == "__main__":
     x = tensorflow.keras.layers.BatchNormalization()(x)
     x = tensorflow.keras.layers.Dropout(0.5)(x)
 
-    network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.sigmoid,
+    network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.tanh,
                                                    use_bias=True, kernel_initializer="glorot_normal")(x)
 
     network = tensorflow.keras.models.Model(inputs=[board_input, extra_input], outputs=network_output)

@@ -19,7 +19,7 @@ def load_data(filename):
     save_file.close()
 
     data = (entry[:-1].split(":") for entry in data)
-    data = {k: float(v) for k, v in data}
+    data = {k: 2 * float(v) - 1 for k, v in data}
 
     return data
 
