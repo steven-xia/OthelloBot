@@ -86,8 +86,6 @@ while not b.is_game_over():
                 move = ""
     b.move(move)
 
-    evaluator.get_frontier_score(b.bitboard_black, b.bitboard_white)
-
     turn += 1
 
 print()
