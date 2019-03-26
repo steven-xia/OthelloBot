@@ -12,11 +12,12 @@ def shifted_leaky_relu(x):
     return x
 
 
-def simple_residual_block(layer_input, block_size, *args, **kwargs):
+def simple_residual_block(layer_input, block_size, activation, *args, **kwargs):
     flow = layer_input
     for _ in range(block_size):
-        flow = tensorflow.keras.layers.Conv2D(*args, **kwargs)(flow)
         flow = tensorflow.keras.layers.BatchNormalization()(flow)
+        flow = tensorflow.keras.layers.Activation(activation)(flow)
+        flow = tensorflow.keras.layers.Conv2D(*args, **kwargs)(flow)
     flow = tensorflow.keras.layers.Add()([flow, layer_input])
 
     return flow
@@ -70,13 +71,14 @@ if __name__ == "__main__":
 
         x = board_input
 
-        x = simple_residual_block(x, 2, filters=16, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                  use_bias=True, kernel_initializer="glorot_normal",
-                                  activation=shifted_leaky_relu)
+        x = tensorflow.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
 
-        x = simple_residual_block(x, 2, filters=16, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                  use_bias=True, kernel_initializer="glorot_normal",
-                                  activation=shifted_leaky_relu)
+        x = simple_residual_block(x, 2, shifted_leaky_relu, filters=16, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal", )
+
+        x = simple_residual_block(x, 2, shifted_leaky_relu, filters=16, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal", )
 
         x = tensorflow.keras.layers.Conv2D(filters=16, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
@@ -84,17 +86,17 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
-        x = simple_residual_block(x, 3, filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                  use_bias=True, kernel_initializer="glorot_normal",
-                                  activation=shifted_leaky_relu)
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
 
-        x = simple_residual_block(x, 3, filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                  use_bias=True, kernel_initializer="glorot_normal",
-                                  activation=shifted_leaky_relu)
+        x = simple_residual_block(x, 3, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal")
 
-        x = simple_residual_block(x, 3, filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                  use_bias=True, kernel_initializer="glorot_normal",
-                                  activation=shifted_leaky_relu)
+        x = simple_residual_block(x, 3, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal")
+
+        x = simple_residual_block(x, 3, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal")
 
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
