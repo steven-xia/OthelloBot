@@ -86,6 +86,11 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
 
+        x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
         x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
