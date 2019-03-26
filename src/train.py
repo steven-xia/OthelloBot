@@ -69,9 +69,9 @@ if __name__ == "__main__":
     SAVE_FILE = "network.h5"
 
     ACTIVATION = shifted_leaky_relu
-    RESIDUAL_DROPOUT_RATE = 0.1
+    RESIDUAL_DROPOUT_RATE = 0.0
     DROPOUT_RATE = 0.2
-    DENSE_DROPOUT_RATE = 0.3
+    DENSE_DROPOUT_RATE = 0.2
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
