@@ -135,7 +135,7 @@ if __name__ == "__main__":
             batch_size=256,
             callbacks=[
                 tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=1, verbose=1,
-                                                             mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),
+                                                             mode='auto', min_delta=0, cooldown=0, min_lr=0),
                 tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=1,
                                                          mode='auto', baseline=None, restore_best_weights=True)
             ],
