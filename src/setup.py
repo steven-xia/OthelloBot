@@ -9,6 +9,9 @@ import shutil
 import os
 
 
+original_things = tuple(os.listdir("."))
+
+
 print("\033[33;1m <-- COMPILING FILES ... --> \033[0m")
 
 if len(sys.argv) == 1:
@@ -42,11 +45,12 @@ except FileNotFoundError:
     pass
 
 shutil.copytree("dist", os.path.join("..", "dist"))
+shutil.copy("network.h5", os.path.join("..", "dist", "othello_bot"))
 
 
 things = os.listdir(".")
 for item in things:
-    if not (item.endswith(".py") or item.endswith(".pyx")):
+    if item not in original_things:
         item_path = os.path.join(".", item)
         try:
             print(f"Removing file: {item_path}")
