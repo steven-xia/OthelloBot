@@ -1,6 +1,6 @@
 import board
 
-INFINITY = 2147483647
+INFINITY = 32768
 
 A = ord("A")
 COORD_TO_BITBOARD = {chr(A + l) + str(n + 1): 1 << (board.BOARD_SIZE * n + l)

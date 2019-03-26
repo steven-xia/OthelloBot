@@ -33,6 +33,7 @@ def preprocess_board_object(board_object):
 
 
 def inverse_tanh(x):
+    x = max(-0.99999, min(0.99999, x))
     return (1 / 2) * math.log((x + 1) / (1 - x))
 
 
