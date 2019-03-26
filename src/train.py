@@ -58,7 +58,7 @@ if __name__ == "__main__":
     SAVE_FILE = "network.h5"
 
     ACTIVATION = shifted_leaky_relu
-    DROPOUT_RATE = 0.5
+    DROPOUT_RATE = 0.2
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
@@ -86,6 +86,9 @@ if __name__ == "__main__":
         x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
                                   padding="same", use_bias=True, kernel_initializer="glorot_normal")
 
+        x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
+                                  padding="same", use_bias=True, kernel_initializer="glorot_normal")
+
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
@@ -94,11 +97,6 @@ if __name__ == "__main__":
 
         x = tensorflow.keras.layers.Flatten()(x)
         x = tensorflow.keras.layers.Concatenate()([x, extra_input])
-
-        x = tensorflow.keras.layers.Dense(units=256, use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
         x = tensorflow.keras.layers.Dense(units=64, use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
