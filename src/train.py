@@ -47,7 +47,7 @@ if __name__ == "__main__":
     SAVE_FILE = "network.h5"
 
     ACTIVATION = shifted_leaky_relu
-    DROPOUT_RATE = 0.1
+    DROPOUT_RATE = 0.2
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
@@ -60,6 +60,8 @@ if __name__ == "__main__":
 
         x = board_input
 
+        x2 = x
+
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
@@ -69,6 +71,22 @@ if __name__ == "__main__":
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Concatenate()([x, x2])
+
+        x2 = x
+
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Concatenate()([x, x2])
 
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
@@ -76,10 +94,7 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
-        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                           use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x2 = x
 
         x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
@@ -90,6 +105,32 @@ if __name__ == "__main__":
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Concatenate()([x, x2])
+
+        x2 = x
+
+        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Concatenate()([x, x2])
 
         x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
