@@ -12,14 +12,25 @@ def shifted_leaky_relu(x):
     return x
 
 
-def simple_residual_block(layer_input, block_size, activation, *args, **kwargs):
+def simple_squeeze_excitation_block(layer_input, filters, activation, reduction_ratio, **kwargs):
+    flow = tensorflow.keras.layers.GlobalAveragePooling2D()(layer_input)
+    flow = tensorflow.keras.layers.Dense(filters // reduction_ratio, **kwargs)(flow)
+    flow = tensorflow.keras.layers.Activation(activation)(flow)
+    flow = tensorflow.keras.layers.Dense(filters, **kwargs)(flow)
+    flow = tensorflow.keras.layers.Activation(tensorflow.keras.activations.sigmoid)(flow)
+    flow = tensorflow.keras.layers.Multiply()([flow, layer_input])
+    return flow
+
+
+def simple_residual_block(layer_input, block_size, activation, filters, **kwargs):
     flow = layer_input
     for _ in range(block_size):
         flow = tensorflow.keras.layers.BatchNormalization()(flow)
         flow = tensorflow.keras.layers.Activation(activation)(flow)
-        flow = tensorflow.keras.layers.Conv2D(*args, **kwargs)(flow)
+        flow = tensorflow.keras.layers.Conv2D(filters, **kwargs)(flow)
+    flow = simple_squeeze_excitation_block(flow, filters, activation, reduction_ratio=16,
+                                           kernel_initializer="glorot_normal", use_bias=True)
     flow = tensorflow.keras.layers.Add()([flow, layer_input])
-
     return flow
 
 
@@ -58,7 +69,9 @@ if __name__ == "__main__":
     SAVE_FILE = "network.h5"
 
     ACTIVATION = shifted_leaky_relu
+    RESIDUAL_DROPOUT_RATE = 0.1
     DROPOUT_RATE = 0.2
+    DENSE_DROPOUT_RATE = 0.3
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
@@ -73,21 +86,23 @@ if __name__ == "__main__":
 
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
         x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
                                   padding="same", use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(RESIDUAL_DROPOUT_RATE)(x)
 
         x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
                                   padding="same", use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(RESIDUAL_DROPOUT_RATE)(x)
 
         x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
                                   padding="same", use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(RESIDUAL_DROPOUT_RATE)(x)
 
         x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
                                   padding="same", use_bias=True, kernel_initializer="glorot_normal")
-
-        x = simple_residual_block(x, 2, shifted_leaky_relu, filters=32, kernel_size=(3, 3), strides=(1, 1),
-                                  padding="same", use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(RESIDUAL_DROPOUT_RATE)(x)
 
         x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(2, 2), strides=(2, 2), padding="valid",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
@@ -101,7 +116,12 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.Dense(units=64, use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Dense(units=64, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
 
         network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.tanh,
                                                        use_bias=True, kernel_initializer="glorot_normal")(x)
