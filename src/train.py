@@ -60,6 +60,27 @@ if __name__ == "__main__":
 
         x = board_input
 
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=32, kernel_size=(2, 2), strides=(2, 2), padding="valid",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
+                                           use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+
         x = tensorflow.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same",
                                            use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
@@ -76,49 +97,28 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
-        x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                           use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-
-        x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                           use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-
-        x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), padding="same",
-                                           use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-
-        x = tensorflow.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), strides=(2, 2), padding="valid",
-                                           use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
-
         x = tensorflow.keras.layers.Flatten()(x)
         x = tensorflow.keras.layers.Concatenate()([x, extra_input])
 
-        x = tensorflow.keras.layers.Dense(units=2048, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Dense(units=512, use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
-        x = tensorflow.keras.layers.Dense(units=2048, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Dense(units=512, use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
-        x = tensorflow.keras.layers.Dense(units=256, use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
-
-        x = tensorflow.keras.layers.Dense(units=256, use_bias=True, kernel_initializer="glorot_normal")(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        x = tensorflow.keras.layers.BatchNormalization()(x)
-        x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
+        # x = tensorflow.keras.layers.Dense(units=256, use_bias=True, kernel_initializer="glorot_normal")(x)
+        # x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        # x = tensorflow.keras.layers.BatchNormalization()(x)
+        # x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
+        #
+        # x = tensorflow.keras.layers.Dense(units=256, use_bias=True, kernel_initializer="glorot_normal")(x)
+        # x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        # x = tensorflow.keras.layers.BatchNormalization()(x)
+        # x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
         network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.tanh,
                                                        use_bias=True, kernel_initializer="glorot_normal")(x)
