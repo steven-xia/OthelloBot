@@ -4,11 +4,13 @@ import evaluator
 import engine
 import board
 
+import nn as evaluator
+
 
 try:
-    # from matplotlib import pyplot as pylab
+    from matplotlib import pyplot as pylab
 
-    GRAPH = False
+    GRAPH = True
 except ImportError:
     GRAPH = False
 
@@ -16,7 +18,7 @@ SELF_PLAY = False
 
 current_limit = 64
 
-DIFFICULTY = int(input("Enter difficulty (1 - 10): ")) ** 2 / 10
+DIFFICULTY = float(input("Enter difficulty (1 - 10): ")) ** 2 / 10
 print(f"Time per move set at {round(DIFFICULTY, 2)} seconds.")
 # DIFFICULTY = 2
 
