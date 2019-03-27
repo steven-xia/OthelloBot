@@ -43,9 +43,9 @@ def evaluate(board_object):
     # if the game is over
     if board_object.is_game_over():
         if black_score > white_score:
-            return engine.INFINITY - (board.BOARD_ARRAY_SIZE - white_score)
+            return engine.INFINITY - white_score
         elif black_score < white_score:
-            return -engine.INFINITY + (board.BOARD_ARRAY_SIZE - black_score)
+            return -engine.INFINITY + black_score
         else:
             return 0
 
