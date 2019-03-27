@@ -81,8 +81,8 @@ if __name__ == "__main__":
     ACTIVATION = shifted_leaky_relu
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.3
-    DENSE_BLOCK_DROPOUT_RATE = 0.2
-    DENSE_DROPOUT_RATE = 0.1
+    DENSE_BLOCK_DROPOUT_RATE = 0.0
+    DENSE_DROPOUT_RATE = 0.3
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
