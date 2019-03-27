@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
         x = tensorflow.keras.layers.Dense(128, use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.BatchNormalization()(x)
-        x = tensorflow.keras.layers.Activation(ACTIVATION)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
         x = tensorflow.keras.layers.Dropout(DROPOUT_RATE)(x)
 
         x = dense_block(x, 2, ACTIVATION, units=64, use_bias=True, kernel_initializer="glorot_normal")
