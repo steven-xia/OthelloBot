@@ -16,7 +16,8 @@ except ImportError:
 
 SELF_PLAY = False
 
-current_limit = 64
+current_limit = 320
+max_limit = 3200
 
 DIFFICULTY = float(input("Enter difficulty (1 - 10): ")) ** 2 / 10
 print(f"Time per move set at {round(DIFFICULTY, 2)} seconds.")
@@ -61,7 +62,7 @@ while not b.is_game_over():
         print("Evaluation:", value)
 
         if GRAPH:
-            value = max(-640, min(640, value))
+            value = max(-max_limit, min(max_limit, value))
             evaluations.append(value)
             current_limit = max(abs(value), current_limit)
             pylab.plot(evaluations, color="blue", marker="o")
