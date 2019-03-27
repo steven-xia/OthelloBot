@@ -114,10 +114,10 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.Concatenate()([x, extra_input])
 
         for _ in range(4):
-            x = dense_block(x, 2, ACTIVATION, units=256, use_bias=True, kernel_initializer="glorot_normal")
+            x = dense_block(x, 2, ACTIVATION, units=512, use_bias=True, kernel_initializer="glorot_normal")
             x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
 
-            x = tensorflow.keras.layers.Dense(256, use_bias=True, kernel_initializer="glorot_normal")(x)
+            x = tensorflow.keras.layers.Dense(512, use_bias=True, kernel_initializer="glorot_normal")(x)
             x = tensorflow.keras.layers.BatchNormalization()(x)
             x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
             x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
