@@ -1,3 +1,4 @@
+import os
 import math
 
 import numpy
@@ -7,13 +8,17 @@ import board
 import engine
 
 
+NETWORK_LOCATION = os.path.join(os.path.dirname(__file__), "network.h5")
+
+
 def shifted_leaky_relu(x):
     x = tensorflow.keras.backend.maximum(0.5 * x, x)
     x = tensorflow.keras.backend.maximum(-tensorflow.keras.backend.ones_like(x), x)
     return x
 
 
-network = tensorflow.keras.models.load_model("network.h5", custom_objects={"shifted_leaky_relu": shifted_leaky_relu})
+network = tensorflow.keras.models.load_model(NETWORK_LOCATION,
+                                             custom_objects={"shifted_leaky_relu": shifted_leaky_relu})
 
 
 def preprocess_board_object(board_object):
