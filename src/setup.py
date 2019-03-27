@@ -12,7 +12,7 @@ import os
 original_things = tuple(os.listdir("."))
 
 
-print("\033[33;1m <-- COMPILING FILES ... --> \033[0m")
+print("\033[33;1m <-- COMPILING FILES --> \033[0m")
 
 if len(sys.argv) == 1:
     sys.argv.append("build_ext")
@@ -33,11 +33,11 @@ distutils.core.setup(
 )
 
 
-print("\033[33;1m <-- BUILDING_EXECUTABLE ... --> \033[0m")
+print("\033[33;1m <-- BUILDING_EXECUTABLE --> \033[0m")
 subprocess.call(r"python -m PyInstaller -y othello_bot.py")
 
 
-print("\033[33;1m <-- CLEANING UP ... --> \033[0m")
+print("\033[33;1m <-- CLEANING UP --> \033[0m")
 
 try:
     shutil.rmtree(os.path.join("..", "dist"))
