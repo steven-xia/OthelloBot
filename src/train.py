@@ -79,10 +79,10 @@ if __name__ == "__main__":
     SAVE_FILE = "network.h5"
 
     ACTIVATION = shifted_leaky_relu
-    RESIDUAL_BLOCK_DROPOUT_RATE = 0.1
+    RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.3
-    DENSE_BLOCK_DROPOUT_RATE = 0.1
-    DENSE_DROPOUT_RATE = 0.2
+    DENSE_BLOCK_DROPOUT_RATE = 0.2
+    DENSE_DROPOUT_RATE = 0.1
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
@@ -171,9 +171,9 @@ if __name__ == "__main__":
         network.fit(
             x=[training_board_inputs, training_extra_inputs],
             y=training_outputs,
-            epochs=256,
+            epochs=64,
             validation_split=0.01,
-            batch_size=256,
+            batch_size=64,
             callbacks=[
                 tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=1,
                                                              mode='auto', min_delta=0, cooldown=0, min_lr=0),
