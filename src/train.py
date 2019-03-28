@@ -80,9 +80,9 @@ if __name__ == "__main__":
 
     ACTIVATION = shifted_leaky_relu
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.3
+    DOWNSAMPLING_DROPOUT_RATE = 0.2
     DENSE_BLOCK_DROPOUT_RATE = 0.0
-    DENSE_DROPOUT_RATE = 0.2
+    DENSE_DROPOUT_RATE = 0.1
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
@@ -113,14 +113,37 @@ if __name__ == "__main__":
         x = tensorflow.keras.layers.Flatten()(x)
         x = tensorflow.keras.layers.Concatenate()([x, extra_input])
 
-        for _ in range(4):
-            x = dense_block(x, 2, ACTIVATION, units=512, use_bias=True, kernel_initializer="glorot_normal")
-            x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
+        x = dense_block(x, 2, ACTIVATION, units=512, use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
 
-            x = tensorflow.keras.layers.Dense(512, use_bias=True, kernel_initializer="glorot_normal")(x)
-            x = tensorflow.keras.layers.BatchNormalization()(x)
-            x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-            x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
+        x = tensorflow.keras.layers.Dense(512, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
+
+        x = dense_block(x, 2, ACTIVATION, units=256, use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Dense(256, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
+
+        x = dense_block(x, 2, ACTIVATION, units=128, use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Dense(128, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
+
+        x = dense_block(x, 2, ACTIVATION, units=64, use_bias=True, kernel_initializer="glorot_normal")
+        x = tensorflow.keras.layers.Dropout(DENSE_BLOCK_DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Dense(64, use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DENSE_DROPOUT_RATE)(x)
 
         network_output = tensorflow.keras.layers.Dense(units=1, activation=tensorflow.keras.activations.tanh,
                                                        use_bias=True, kernel_initializer="glorot_normal")(x)
