@@ -3,6 +3,7 @@ The `shifted_leaky_relu()` was found from my private testing to be a very good a
 Information can be found here: https://colab.research.google.com/drive/1QJJ9DprXPs5IvCjwQhi5hGiu9CFK999N
 """
 
+import os
 import tensorflow
 
 
@@ -44,12 +45,12 @@ def dense_block(layer_input, block_size, activation, units, **kwargs):
     return flow
 
 
-def compile_for_tpu(model):
-    import os
+def on_tpu():
     import pprint
 
     if 'COLAB_TPU_ADDR' not in os.environ:
-        print('ERROR: Not connected to a TPU runtime; please see the first cell in this notebook for instructions!')
+        print('ERROR: Not connected to a TPU runtime!')
+        return False
     else:
         tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
         print('TPU address is', tpu_address)
@@ -60,16 +61,24 @@ def compile_for_tpu(model):
         print('TPU devices:')
         pprint.pprint(devices)
 
-        # This address identifies the TPU we'll use when configuring TensorFlow.
-        TPU_WORKER = 'grpc://' + os.environ['COLAB_TPU_ADDR']
-        tensorflow.logging.set_verbosity(tensorflow.logging.INFO)
+        return True
 
-        model = tensorflow.contrib.tpu.keras_to_tpu_model(
-            model,
-            strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
-                tensorflow.contrib.cluster_resolver.TPUClusterResolver(TPU_WORKER)))
 
-        return model
+def compile_optimizer_for_tpu(optimizer):
+    optimizer = tensorflow.contrib.tpu.CrossShardOptimizer(optimizer)
+    return optimizer
+
+
+def compile_model_for_tpu(model):
+    tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
+    tensorflow.logging.set_verbosity(tensorflow.logging.INFO)
+
+    model = tensorflow.contrib.tpu.keras_to_tpu_model(
+        model,
+        strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+            tensorflow.contrib.cluster_resolver.TPUClusterResolver(tpu_address)))
+
+    return model
 
 
 ACTIVATION_FUNCTION = shifted_leaky_relu
@@ -103,6 +112,8 @@ if __name__ == "__main__":
 
     # TRAINING BELOW ---------------------------------------------------------------------------------------------------
 
+    ON_TPU = on_tpu()
+
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
@@ -113,6 +124,8 @@ if __name__ == "__main__":
     DENSE_BLOCK_SIZE = 256
 
     ACTIVATION = tensorflow.keras.activations.relu
+    OPTIMIZER = tensorflow.keras.optimizers.Adam()
+
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.1
     DENSE_BLOCK_DROPOUT_RATE = 0.0
@@ -160,16 +173,17 @@ if __name__ == "__main__":
                                                        use_bias=True, kernel_initializer="glorot_normal")(x)
 
         network = tensorflow.keras.models.Model(inputs=[board_input, extra_input], outputs=network_output)
+
+        if ON_TPU:
+            OPTIMIZER = compile_optimizer_for_tpu(OPTIMIZER)
+
         network.compile(
-            tensorflow.keras.optimizers.Adam(),
+            OPTIMIZER,
             loss=tensorflow.keras.losses.mse,
         )
 
-    try:
-        print("Attempting to compile for TPU.")
-        network = compile_for_tpu(network)
-    except Exception as err:
-        print(err)
+    if ON_TPU:
+        network = compile_model_for_tpu(network)
 
     network.summary()
 
