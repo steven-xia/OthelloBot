@@ -78,15 +78,15 @@ if __name__ == "__main__":
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
-    CONVOLUTIONAL_BLOCKS = 4
-    CONVOLUTIONAL_BLOCK_SIZE = 32
+    CONVOLUTIONAL_BLOCKS = 6
+    CONVOLUTIONAL_BLOCK_SIZE = 64
 
-    DENSE_BLOCKS = 4
-    DENSE_BLOCK_SIZE = 256
+    DENSE_BLOCKS = 6
+    DENSE_BLOCK_SIZE = 512
 
     ACTIVATION = shifted_leaky_relu
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.1
+    DOWNSAMPLING_DROPOUT_RATE = 0.2
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
@@ -147,9 +147,9 @@ if __name__ == "__main__":
             validation_split=0.01,
             batch_size=256,
             callbacks=[
-                tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=1,
+                tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=1,
                                                              mode='auto', min_delta=0, cooldown=0, min_lr=0),
-                tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=1,
+                tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1,
                                                          mode='auto', baseline=None, restore_best_weights=True)
             ],
             verbose=True
