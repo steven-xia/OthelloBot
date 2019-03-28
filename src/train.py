@@ -1,16 +1,5 @@
-"""
-The `shifted_leaky_relu()` was found from my private testing to be a very good activation function:
-Information can be found here: https://colab.research.google.com/drive/1QJJ9DprXPs5IvCjwQhi5hGiu9CFK999N
-"""
-
 import os
 import tensorflow
-
-
-def shifted_leaky_relu(x):
-    x = tensorflow.keras.backend.maximum(0.5 * x, x)
-    x = tensorflow.keras.backend.maximum(-tensorflow.keras.backend.ones_like(x), x)
-    return x
 
 
 def simple_squeeze_excitation_block(layer_input, filters, activation, reduction_ratio, **kwargs):
@@ -81,9 +70,6 @@ def compile_model_for_tpu(model):
     return model
 
 
-ACTIVATION_FUNCTION = shifted_leaky_relu
-DATA_FILE = "networks/training_data.txt"
-
 if __name__ == "__main__":
     import multiprocessing
 
@@ -93,6 +79,7 @@ if __name__ == "__main__":
     import networks.train_utils
 
     CPU_COUNT = multiprocessing.cpu_count()
+    DATA_FILE = "networks/training_data.txt"
 
     print(f"Loading data from file: {DATA_FILE} ... ")
     data = networks.datafile_manager.load_data(DATA_FILE)
@@ -132,10 +119,7 @@ if __name__ == "__main__":
     DENSE_DROPOUT_RATE = 0.0
 
     if LOAD_FILE:
-        network = tensorflow.keras.models.load_model(
-            SAVE_FILE,
-            custom_objects={"shifted_leaky_relu": shifted_leaky_relu}
-        )
+        network = tensorflow.keras.models.load_model(SAVE_FILE)
     else:
         board_input = tensorflow.keras.layers.Input(shape=(8, 8, 2))
         extra_input = tensorflow.keras.layers.Input(shape=(2,))
