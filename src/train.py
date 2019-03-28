@@ -44,6 +44,34 @@ def dense_block(layer_input, block_size, activation, units, **kwargs):
     return flow
 
 
+def compile_for_tpu(model):
+    import os
+    import pprint
+
+    if 'COLAB_TPU_ADDR' not in os.environ:
+        print('ERROR: Not connected to a TPU runtime; please see the first cell in this notebook for instructions!')
+    else:
+        tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
+        print('TPU address is', tpu_address)
+
+        with tf.Session(tpu_address) as session:
+            devices = session.list_devices()
+
+        print('TPU devices:')
+        pprint.pprint(devices)
+
+        # This address identifies the TPU we'll use when configuring TensorFlow.
+        TPU_WORKER = 'grpc://' + os.environ['COLAB_TPU_ADDR']
+        tensorflow.logging.set_verbosity(tensorflow.logging.INFO)
+
+        model = tensorflow.contrib.tpu.keras_to_tpu_model(
+            model,
+            strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(TPU_WORKER)))
+
+        return model
+
+
 ACTIVATION_FUNCTION = shifted_leaky_relu
 DATA_FILE = "networks/training_data.txt"
 
@@ -84,9 +112,9 @@ if __name__ == "__main__":
     DENSE_BLOCKS = 4
     DENSE_BLOCK_SIZE = 256
 
-    ACTIVATION = shifted_leaky_relu
+    ACTIVATION = tensorflow.keras.activations.relu
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.15
+    DOWNSAMPLING_DROPOUT_RATE = 0.1
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
@@ -136,6 +164,12 @@ if __name__ == "__main__":
             tensorflow.keras.optimizers.Adam(),
             loss=tensorflow.keras.losses.mse,
         )
+
+    try:
+        print("Attempting to compile for TPU.")
+        network = compile_for_tpu(network)
+    except Exception as err:
+        print(err)
 
     network.summary()
 
