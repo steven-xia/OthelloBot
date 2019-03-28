@@ -38,11 +38,17 @@ def preprocess_board_object(board_object):
 
 
 TANH_LIMIT = 1 - 10 ** (-16)
+INVERSE_TANH_LIMIT = 0.9999997749296759
 
 
 def inverse_tanh(x):
     x = max(-TANH_LIMIT, min(TANH_LIMIT, x))
     return (1 / 2) * math.log((x + 1) / (1 - x))
+
+
+def inverse_tanh_squared(x):
+    x = max(-INVERSE_TANH_LIMIT, min(INVERSE_TANH_LIMIT, x))
+    return (x / abs(x)) * inverse_tanh(x) ** 2
 
 
 def evaluate(board_object):
@@ -60,4 +66,4 @@ def evaluate(board_object):
     inputs = preprocess_board_object(board_object)
     output = network.predict(inputs)[0][0]
 
-    return int(100 * inverse_tanh(output))
+    return int(100 * inverse_tanh_squared(output))
