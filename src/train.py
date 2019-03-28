@@ -82,7 +82,7 @@ if __name__ == "__main__":
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.3
     DENSE_BLOCK_DROPOUT_RATE = 0.0
-    DENSE_DROPOUT_RATE = 0.3
+    DENSE_DROPOUT_RATE = 0.2
 
     if LOAD_FILE:
         network = tensorflow.keras.models.load_model(
