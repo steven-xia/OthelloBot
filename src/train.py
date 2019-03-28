@@ -82,11 +82,11 @@ if __name__ == "__main__":
     CONVOLUTIONAL_BLOCK_SIZE = 32
 
     DENSE_BLOCKS = 4
-    DENSE_BLOCK_SIZE = 512
+    DENSE_BLOCK_SIZE = 256
 
     ACTIVATION = shifted_leaky_relu
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.2
+    DOWNSAMPLING_DROPOUT_RATE = 0.1
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
             y=training_outputs,
             epochs=2048,
             validation_split=0.01,
-            batch_size=2048,
+            batch_size=256,
             callbacks=[
                 tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, verbose=1,
                                                              mode='auto', min_delta=0, cooldown=0, min_lr=0),
