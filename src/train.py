@@ -54,7 +54,7 @@ def compile_for_tpu(model):
         tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
         print('TPU address is', tpu_address)
 
-        with tf.Session(tpu_address) as session:
+        with tensorflow.Session(tpu_address) as session:
             devices = session.list_devices()
 
         print('TPU devices:')
