@@ -37,8 +37,11 @@ def preprocess_board_object(board_object):
     return numpy.array([board_input]), numpy.array([extra_input])
 
 
+TANH_LIMIT = 1 - 10 ** (-16)
+
+
 def inverse_tanh(x):
-    x = max(-0.99999, min(0.99999, x))
+    x = max(-TANH_LIMIT, min(TANH_LIMIT, x))
     return (1 / 2) * math.log((x + 1) / (1 - x))
 
 
