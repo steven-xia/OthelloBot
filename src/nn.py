@@ -57,4 +57,5 @@ def evaluate(board_object):
     inputs = preprocess_board_object(board_object)
     output = network.predict(inputs)[0][0]
 
+    # return int(100 * inverse_tanh(output))
     return int(100 * inverse_tanh_squared(output))

@@ -111,10 +111,10 @@ if __name__ == "__main__":
     DENSE_BLOCK_SIZE = 256
 
     ACTIVATION = tensorflow.keras.activations.relu
-    OPTIMIZER = tensorflow.keras.optimizers.Adam()
+    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.1
+    DOWNSAMPLING_DROPOUT_RATE = 0.0
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
@@ -189,4 +189,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
+        print("Saving network... ")
         network.save(SAVE_FILE)
