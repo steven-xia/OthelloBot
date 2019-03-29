@@ -111,7 +111,7 @@ if __name__ == "__main__":
     DENSE_BLOCK_SIZE = 256
 
     ACTIVATION = tensorflow.keras.activations.relu
-    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
+    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.0
@@ -158,9 +158,6 @@ if __name__ == "__main__":
 
         network = tensorflow.keras.models.Model(inputs=[board_input, extra_input], outputs=network_output)
 
-        if ON_TPU:
-            OPTIMIZER = compile_optimizer_for_tpu(OPTIMIZER)
-
         network.compile(
             OPTIMIZER,
             loss=tensorflow.keras.losses.mse,
@@ -177,7 +174,7 @@ if __name__ == "__main__":
             y=training_outputs,
             epochs=2048,
             validation_split=0.01,
-            batch_size=256,
+            batch_size=2048,
             callbacks=[
                 tensorflow.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=1,
                                                              mode='auto', min_delta=0, cooldown=0, min_lr=0),
