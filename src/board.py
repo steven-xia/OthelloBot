@@ -209,7 +209,7 @@ class Board:
     @staticmethod
     def _move_board(move, to_move_board, opponent_board):
         # taking up ...
-        temporary_bitboard = (to_move_board >> BOARD_SIZE) & opponent_board
+        temporary_bitboard = (to_move_board >> BOARD_SIZE) & opponent_board & BOTTOM_EDGE
         while temporary_bitboard:
             if (temporary_bitboard >> BOARD_SIZE) & move & BOTTOM_EDGE:
                 temp_move = move
@@ -222,7 +222,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard >> BOARD_SIZE) & opponent_board & BOTTOM_EDGE
 
         # taking down ...
-        temporary_bitboard = (to_move_board << BOARD_SIZE) & opponent_board
+        temporary_bitboard = (to_move_board << BOARD_SIZE) & opponent_board & TOP_EDGE
         while temporary_bitboard:
             if (temporary_bitboard << BOARD_SIZE) & move & TOP_EDGE:
                 temp_move = move
@@ -235,7 +235,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard << BOARD_SIZE) & opponent_board & TOP_EDGE
 
         # taking left ...
-        temporary_bitboard = (to_move_board >> 1) & opponent_board
+        temporary_bitboard = (to_move_board >> 1) & opponent_board & RIGHT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard >> 1) & move & RIGHT_EDGE:
                 temp_move = move
@@ -248,7 +248,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard >> 1) & opponent_board & RIGHT_EDGE
 
         # taking right ...
-        temporary_bitboard = (to_move_board << 1) & opponent_board
+        temporary_bitboard = (to_move_board << 1) & opponent_board & LEFT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard << 1) & move & LEFT_EDGE:
                 temp_move = move
@@ -261,7 +261,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard << 1) & opponent_board & LEFT_EDGE
 
         # taking up left ...
-        temporary_bitboard = (to_move_board >> DIAGONAL_MORE) & opponent_board
+        temporary_bitboard = (to_move_board >> DIAGONAL_MORE) & opponent_board & BOTTOM_RIGHT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard >> DIAGONAL_MORE) & move & BOTTOM_RIGHT_EDGE:
                 temp_move = move
@@ -274,7 +274,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard >> DIAGONAL_MORE) & opponent_board & BOTTOM_RIGHT_EDGE
 
         # taking up right ...
-        temporary_bitboard = (to_move_board >> DIAGONAL_LESS) & opponent_board
+        temporary_bitboard = (to_move_board >> DIAGONAL_LESS) & opponent_board & BOTTOM_LEFT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard >> DIAGONAL_LESS) & move & BOTTOM_LEFT_EDGE:
                 temp_move = move
@@ -287,7 +287,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard >> DIAGONAL_LESS) & opponent_board & BOTTOM_LEFT_EDGE
 
         # taking down left ...
-        temporary_bitboard = (to_move_board << DIAGONAL_LESS) & opponent_board
+        temporary_bitboard = (to_move_board << DIAGONAL_LESS) & opponent_board & TOP_RIGHT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard << DIAGONAL_LESS) & move & TOP_RIGHT_EDGE:
                 temp_move = move
@@ -300,7 +300,7 @@ class Board:
             temporary_bitboard = (temporary_bitboard << DIAGONAL_LESS) & opponent_board & TOP_RIGHT_EDGE
 
         # taking down right ...
-        temporary_bitboard = (to_move_board << DIAGONAL_MORE) & opponent_board
+        temporary_bitboard = (to_move_board << DIAGONAL_MORE) & opponent_board & TOP_LEFT_EDGE
         while temporary_bitboard:
             if (temporary_bitboard << DIAGONAL_MORE) & move & TOP_LEFT_EDGE:
                 temp_move = move
