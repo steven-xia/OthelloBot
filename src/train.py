@@ -75,19 +75,19 @@ if __name__ == "__main__":
 
     import numpy
 
-    import networks.datafile_manager
-    import networks.train_utils
+    import training.datafile_manager
+    import training.train_utils
 
     CPU_COUNT = multiprocessing.cpu_count()
-    DATA_FILE = "networks/training_data.txt"
+    DATA_FILE = "training/training_data.txt"
 
     print(f"Loading data from file: {DATA_FILE} ... ")
-    data = networks.datafile_manager.load_data(DATA_FILE)
+    data = training.datafile_manager.load_data(DATA_FILE)
 
     print(f"Preprocessing data with {CPU_COUNT} threads ... ")
     print(f"  - Parsing data ... ")
     p = multiprocessing.Pool(CPU_COUNT)
-    data = p.map(networks.train_utils.preprocess_game, data.items(), chunksize=int(len(data) / CPU_COUNT))
+    data = p.map(training.train_utils.preprocess_game, data.items(), chunksize=int(len(data) / CPU_COUNT))
 
     print(f"  - Splitting data ... ")
     training_inputs, training_outputs = tuple(zip(*data))
