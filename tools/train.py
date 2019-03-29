@@ -111,7 +111,7 @@ if __name__ == "__main__":
     DENSE_BLOCK_SIZE = 896
 
     ACTIVATION = tensorflow.keras.activations.relu
-    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
+    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.1
