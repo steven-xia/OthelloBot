@@ -104,17 +104,17 @@ if __name__ == "__main__":
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
-    CONVOLUTIONAL_BLOCKS = 0
-    CONVOLUTIONAL_BLOCK_SIZE = 64
+    CONVOLUTIONAL_BLOCKS = 9
+    CONVOLUTIONAL_BLOCK_SIZE = 112
 
-    DENSE_BLOCKS = 6
-    DENSE_BLOCK_SIZE = 512
+    DENSE_BLOCKS = 9
+    DENSE_BLOCK_SIZE = 896
 
     ACTIVATION = tensorflow.keras.activations.relu
     OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.0
+    DOWNSAMPLING_DROPOUT_RATE = 0.1
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
