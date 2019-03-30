@@ -41,7 +41,7 @@ SQUARED_FACTOR = math.log(64) / math.log(inverse_tanh(TANH_LIMIT)) + 10 ** (-12)
 
 def inverse_tanh_squared(x):
     x = max(-TANH_LIMIT, min(TANH_LIMIT, x))
-    return (x / abs(x)) * inverse_tanh(x) ** SQUARED_FACTOR
+    return (x / abs(x)) * inverse_tanh(abs(x)) ** SQUARED_FACTOR
 
 
 def evaluate(board_object):
