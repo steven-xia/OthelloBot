@@ -9,14 +9,21 @@ import shutil
 import os
 
 
-original_things = tuple(os.listdir("."))
+SCRIPT_NAME = "othello_bot"
+
+
+CURRENT_PATH = os.path.dirname(__file__)
+PARENT_DIRECTORY = os.path.abspath(os.path.join(CURRENT_PATH, os.pardir))
+DIST_LOCATION = os.path.join(PARENT_DIRECTORY, "dist")
+
+original_items = tuple(map(lambda i: os.path.join(CURRENT_PATH, i), os.listdir(CURRENT_PATH)))
 
 
 print("\033[33;1m <-- COMPILING FILES --> \033[0m")
 
-if len(sys.argv) == 1:
-    sys.argv.append("build_ext")
-    sys.argv.append("--inplace")
+sys.argv = sys.argv[:1]
+sys.argv.append("build_ext")
+sys.argv.append("--inplace")
 
 
 os.environ["CFLAGS"] = "-O3"
@@ -24,7 +31,6 @@ os.environ["CFLAGS"] = "-O3"
 distutils.core.setup(
     ext_modules=cythonize(
         "*.pyx",
-        # exclude=["setup.py", "othello_bot.py"],
         compiler_directives={"optimize.use_switch": True,
                              "optimize.unpack_method_calls": True},
         language_level=3,
@@ -34,27 +40,27 @@ distutils.core.setup(
 
 
 print("\033[33;1m <-- BUILDING_EXECUTABLE --> \033[0m")
-subprocess.call(r"python -m PyInstaller -y othello_bot.py")
+subprocess.call(rf"python -m PyInstaller -y {SCRIPT_NAME}.py")
 
 
 print("\033[33;1m <-- CLEANING UP --> \033[0m")
 
 try:
-    shutil.rmtree(os.path.join("..", "dist"))
+    print(f"Removing existing dist folder if exists ({DIST_LOCATION}).")
+    shutil.rmtree(DIST_LOCATION)
 except FileNotFoundError:
     pass
 
-shutil.copytree("dist", os.path.join("..", "dist"))
-shutil.copy("network.h5", os.path.join("..", "dist", "othello_bot"))
+print(f"Copying dist folder to parent directory (dist -> {DIST_LOCATION}).")
+shutil.copytree("dist", DIST_LOCATION)
+shutil.copy("network.h5", os.path.join(PARENT_DIRECTORY, "dist", SCRIPT_NAME))
 
 
-things = os.listdir(".")
-for item in things:
-    if item not in original_things:
-        item_path = os.path.join(".", item)
-        try:
-            print(f"Removing file: {item_path}")
-            os.remove(item_path)
-        except PermissionError:
-            print(f"Removing directory: {item_path}")
-            shutil.rmtree(item_path)
+things = tuple(map(lambda i: os.path.join(CURRENT_PATH, i), os.listdir(CURRENT_PATH)))
+for item in filter(lambda i: i not in original_items, things):
+    item_path = os.path.join(CURRENT_PATH, item)
+    print(f"Removing item: {item_path}")
+    try:
+        os.remove(item_path)
+    except PermissionError:
+        shutil.rmtree(item_path)
