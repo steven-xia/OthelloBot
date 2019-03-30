@@ -48,6 +48,7 @@ while not b.is_game_over():
 
             move = pv[0]
             pv = " ".join(tuple(map(lambda m: engine.BITBOARD_TO_COORD[m], pv)))
+            t = time.time() - start_time
 
             print(f"info depth {depth} " +
                   f"time {int(1000 * (time.time() - start_time))} " +
@@ -56,7 +57,6 @@ while not b.is_game_over():
                   f"pv {pv}")
 
             depth += 1
-            t = time.time() - start_time
 
         print(f"bestmove {engine.BITBOARD_TO_COORD[move]}")
         print("Evaluation:", value)
