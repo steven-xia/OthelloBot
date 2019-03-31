@@ -42,6 +42,7 @@ def preprocess(loaded_dictionary):
 
 
 if __name__ == "__main__":
+    # noinspection PyUnresolvedReferences
     import datafile_manager
 
     d = datafile_manager.load_data("training_data.txt")

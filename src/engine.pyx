@@ -56,6 +56,8 @@ class Engine:
 
             value = -INFINITY
             moves_dictionary = {}
+            best_move = 0
+            best_pv = ()
             for move_index, move in enumerate(legal_moves):
                 board_object.move(move)
                 if move_index == 0:

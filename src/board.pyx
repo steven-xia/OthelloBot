@@ -133,7 +133,7 @@ class Board:
             self.null_move()
 
         if self._is_game_over != NOT_CALCULATED and self._is_game_over:
-            return (None,)
+            return tuple((None, ))
 
         cdef unsigned long long to_move_board, opponent_board
         if self.side == BLACK:

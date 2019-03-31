@@ -130,7 +130,7 @@ class Board:
             self.null_move()
 
         if self._is_game_over != NOT_CALCULATED and self._is_game_over:
-            return (None,)
+            return tuple((None, ))
 
         if self.side == BLACK:
             to_move_board = self.bitboard_black
