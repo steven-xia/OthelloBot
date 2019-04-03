@@ -107,8 +107,8 @@ if __name__ == "__main__":
     CONVOLUTIONAL_BLOCKS = 0
     CONVOLUTIONAL_BLOCK_SIZE = 32
 
-    DENSE_BLOCKS = 32
-    DENSE_BLOCK_SIZE = 256
+    DENSE_BLOCKS = 16
+    DENSE_BLOCK_SIZE = 64
 
     ACTIVATION = tensorflow.keras.activations.relu
     OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
