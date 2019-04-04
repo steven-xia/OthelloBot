@@ -8,8 +8,36 @@ import board
 import engine
 
 
+def compile_model_for_tpu(model):
+    import pprint
+
+    if 'COLAB_TPU_ADDR' not in os.environ:
+        print('ERROR: Not connected to a TPU runtime!')
+        return False
+    else:
+        tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
+        print('TPU address is', tpu_address)
+
+        with tensorflow.Session(tpu_address) as session:
+            devices = session.list_devices()
+
+        print('TPU devices:')
+        pprint.pprint(devices)
+
+        tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
+        tensorflow.logging.set_verbosity(tensorflow.logging.INFO)
+
+        model = tensorflow.contrib.tpu.keras_to_tpu_model(
+            model,
+            strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(tpu_address)))
+
+    return model
+
+
 NETWORK_LOCATION = os.path.join(os.path.dirname(__file__), "network.h5")
 network = tensorflow.keras.models.load_model(NETWORK_LOCATION)
+network = compile_model_for_tpu(network)
 
 
 def preprocess_board_object(board_object):

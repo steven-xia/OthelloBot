@@ -17,7 +17,7 @@ except ImportError:
 SELF_PLAY = False
 
 current_limit = 400
-max_limit = 4000
+max_limit = 800
 
 DIFFICULTY = float(input("Enter difficulty (1 - 10): ")) ** 2 / 10
 print(f"Time per move set at {round(DIFFICULTY, 2)} seconds.")
