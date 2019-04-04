@@ -1,43 +1,17 @@
 import os
-import math
 
+import math
 import numpy
 import tensorflow
 
 import board
 import engine
 
-
-def compile_model_for_tpu(model):
-    import pprint
-
-    if 'COLAB_TPU_ADDR' not in os.environ:
-        print('ERROR: Not connected to a TPU runtime!')
-        return False
-    else:
-        tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
-        print('TPU address is', tpu_address)
-
-        with tensorflow.Session(tpu_address) as session:
-            devices = session.list_devices()
-
-        print('TPU devices:')
-        pprint.pprint(devices)
-
-        tpu_address = 'grpc://' + os.environ['COLAB_TPU_ADDR']
-        tensorflow.logging.set_verbosity(tensorflow.logging.INFO)
-
-        model = tensorflow.contrib.tpu.keras_to_tpu_model(
-            model,
-            strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
-                tensorflow.contrib.cluster_resolver.TPUClusterResolver(tpu_address)))
-
-    return model
-
-
-NETWORK_LOCATION = os.path.join(os.path.dirname(__file__), "network.h5")
-network = tensorflow.keras.models.load_model(NETWORK_LOCATION)
-network = compile_model_for_tpu(network)
+NETWORK_LOCATION = os.path.join(os.path.dirname(__file__), "network.tflite")
+interpreter = tensorflow.lite.Interpreter(model_path=NETWORK_LOCATION)
+interpreter.allocate_tensors()
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
 
 def preprocess_board_object(board_object):
@@ -85,7 +59,9 @@ def evaluate(board_object):
             return 0
 
     inputs = preprocess_board_object(board_object)
-    output = network.predict(inputs)[0][0]
+    interpreter.set_tensor(input_details[0]["index"], inputs[0].astype(numpy.float32))
+    interpreter.set_tensor(input_details[1]["index"], inputs[1].astype(numpy.float32))
+    interpreter.invoke()
+    output = interpreter.get_tensor(output_details[0]["index"])
 
-    # return int(100 * inverse_tanh(output))
     return int(100 * inverse_tanh_squared(output))
