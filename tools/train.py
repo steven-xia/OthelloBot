@@ -104,17 +104,17 @@ if __name__ == "__main__":
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
-    CONVOLUTIONAL_BLOCKS = 0
-    CONVOLUTIONAL_BLOCK_SIZE = 32
+    CONVOLUTIONAL_BLOCKS = 9
+    CONVOLUTIONAL_BLOCK_SIZE = 16
 
-    DENSE_BLOCKS = 16
-    DENSE_BLOCK_SIZE = 64
+    DENSE_BLOCKS = 9
+    DENSE_BLOCK_SIZE = 128
 
     ACTIVATION = tensorflow.keras.activations.relu
-    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
+    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
-    DOWNSAMPLING_DROPOUT_RATE = 0.1
+    DOWNSAMPLING_DROPOUT_RATE = 0.0
     DENSE_BLOCK_DROPOUT_RATE = 0.0
     DENSE_DROPOUT_RATE = 0.0
 
@@ -126,20 +126,20 @@ if __name__ == "__main__":
 
         x = board_input
 
-        # x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
-        #                                    padding="same", use_bias=True, kernel_initializer="glorot_normal")(x)
-        # x = tensorflow.keras.layers.Dropout(DOWNSAMPLING_DROPOUT_RATE)(x)
-        #
-        # for _ in range(CONVOLUTIONAL_BLOCKS):
-        #     x = residual_block(x, 2, ACTIVATION, filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
-        #                        padding="same", use_bias=True, kernel_initializer="glorot_normal")
-        #     x = tensorflow.keras.layers.Dropout(RESIDUAL_BLOCK_DROPOUT_RATE)(x)
-        #
-        # x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(2, 2), strides=(2, 2),
-        #                                    padding="valid", use_bias=True, kernel_initializer="glorot_normal")(x)
-        # x = tensorflow.keras.layers.BatchNormalization()(x)
-        # x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
-        # x = tensorflow.keras.layers.Dropout(DOWNSAMPLING_DROPOUT_RATE)(x)
+        x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
+                                           padding="same", use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.Dropout(DOWNSAMPLING_DROPOUT_RATE)(x)
+
+        for _ in range(CONVOLUTIONAL_BLOCKS):
+            x = residual_block(x, 2, ACTIVATION, filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
+                               padding="same", use_bias=True, kernel_initializer="glorot_normal")
+            x = tensorflow.keras.layers.Dropout(RESIDUAL_BLOCK_DROPOUT_RATE)(x)
+
+        x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(2, 2), strides=(2, 2),
+                                           padding="valid", use_bias=True, kernel_initializer="glorot_normal")(x)
+        x = tensorflow.keras.layers.BatchNormalization()(x)
+        x = tensorflow.keras.layers.Activation(ACTIVATION)(x)
+        x = tensorflow.keras.layers.Dropout(DOWNSAMPLING_DROPOUT_RATE)(x)
 
         x = tensorflow.keras.layers.Flatten()(x)
         x = tensorflow.keras.layers.Concatenate()([x, extra_input])
