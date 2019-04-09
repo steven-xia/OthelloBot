@@ -104,11 +104,12 @@ if __name__ == "__main__":
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
+    CONVOLUTION_SIZE = 5
     CONVOLUTIONAL_BLOCKS = 4
-    CONVOLUTIONAL_BLOCK_SIZE = 256
+    CONVOLUTIONAL_BLOCK_SIZE = 64
 
     DENSE_BLOCKS = 2
-    DENSE_BLOCK_SIZE = 2048
+    DENSE_BLOCK_SIZE = 512
 
     ACTIVATION = tensorflow.keras.activations.relu
     OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
@@ -126,12 +127,14 @@ if __name__ == "__main__":
 
         x = board_input
 
-        x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
+        x = tensorflow.keras.layers.Conv2D(filters=CONVOLUTIONAL_BLOCK_SIZE,
+                                           kernel_size=(CONVOLUTION_SIZE, CONVOLUTION_SIZE), strides=(1, 1),
                                            padding="same", use_bias=True, kernel_initializer="glorot_normal")(x)
         x = tensorflow.keras.layers.Dropout(DOWNSAMPLING_DROPOUT_RATE)(x)
 
         for _ in range(CONVOLUTIONAL_BLOCKS):
-            x = residual_block(x, 2, ACTIVATION, filters=CONVOLUTIONAL_BLOCK_SIZE, kernel_size=(3, 3), strides=(1, 1),
+            x = residual_block(x, 2, ACTIVATION, filters=CONVOLUTIONAL_BLOCK_SIZE,
+                               kernel_size=(CONVOLUTION_SIZE, CONVOLUTION_SIZE), strides=(1, 1),
                                padding="same", use_bias=True, kernel_initializer="glorot_normal")
             x = tensorflow.keras.layers.Dropout(RESIDUAL_BLOCK_DROPOUT_RATE)(x)
 
