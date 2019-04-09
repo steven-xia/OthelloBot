@@ -109,10 +109,10 @@ if __name__ == "__main__":
     CONVOLUTIONAL_BLOCK_SIZE = 64
 
     DENSE_BLOCKS = 2
-    DENSE_BLOCK_SIZE = 512
+    DENSE_BLOCK_SIZE = 256
 
     ACTIVATION = tensorflow.keras.activations.relu
-    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.1)
+    OPTIMIZER = tensorflow.keras.optimizers.Adam(lr=0.01)
 
     RESIDUAL_BLOCK_DROPOUT_RATE = 0.0
     DOWNSAMPLING_DROPOUT_RATE = 0.0
