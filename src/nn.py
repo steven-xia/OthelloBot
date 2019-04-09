@@ -27,7 +27,7 @@ def preprocess_board_object(board_object):
     else:
         extra_input = (0, 1)
 
-    return numpy.array([board_input]), numpy.array([extra_input])
+    return board_input, extra_input
 
 
 TANH_LIMIT = 1 - 10 ** (-16)
@@ -59,8 +59,8 @@ def evaluate(board_object):
             return 0
 
     inputs = preprocess_board_object(board_object)
-    interpreter.set_tensor(input_details[0]["index"], inputs[0].astype(numpy.float32))
-    interpreter.set_tensor(input_details[1]["index"], inputs[1].astype(numpy.float32))
+    interpreter.set_tensor(input_details[0]["index"], numpy.array([inputs[0]]).astype(numpy.float32))
+    interpreter.set_tensor(input_details[1]["index"], numpy.array([inputs[1]]).astype(numpy.float32))
     interpreter.invoke()
     output = interpreter.get_tensor(output_details[0]["index"])
 
