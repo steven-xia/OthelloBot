@@ -104,7 +104,7 @@ if __name__ == "__main__":
     LOAD_FILE = False
     SAVE_FILE = "network.h5"
 
-    CONVOLUTION_SIZE = 5
+    CONVOLUTION_SIZE = 3
     CONVOLUTIONAL_BLOCKS = 2
     CONVOLUTIONAL_BLOCK_SIZE = 256
 
