@@ -18,8 +18,8 @@ concrete_function = run_model.get_concrete_function(
 # concrete_function = model.signatures[
 #     tensorflow.saved_model.DEFAULT_SERVING_SIGNATURE_DEF_KEY]
 
-converter = tensorflow.lite.TFLiteConverter.from_keras_model_file(OUTPUT_FILENAME)
+converter = tensorflow.lite.TFLiteConverter.from_keras_model_file(INPUT_FILENAME)
 converter.optimizations = [tensorflow.lite.Optimize.OPTIMIZE_FOR_LATENCY]
 # converter.optimizations = [tensorflow.lite.Optimize.OPTIMIZE_FOR_SIZE]
 tensorflow_lite_model = converter.convert()
-open("network.tflite", "wb+").write(tensorflow_lite_model)
+open(OUTPUT_FILENAME, "wb+").write(tensorflow_lite_model)
