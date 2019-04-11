@@ -140,6 +140,11 @@ SCORE_TUPLE = (
 )
 
 
+PIECE_VALUE_DICTIONARY = {board.BOARD_ARRAY_SIZE - num_pieces:
+                              max(0, -(1 / ((2 * num_pieces / board.BOARD_ARRAY_SIZE) - 2.5)) - 1)
+                          for num_pieces in range(board.BOARD_ARRAY_SIZE + 1)}
+
+
 def get_frontier_score(black_bitboard, white_bitboard):
     pieces = black_bitboard | white_bitboard
 
@@ -179,10 +184,14 @@ def evaluate(board_object):
         piece_score += score * board.popcount(board_object.bitboard_black & bitboard)
         piece_score -= score * board.popcount(board_object.bitboard_white & bitboard)
 
+    absolute_piece_factor = PIECE_VALUE_DICTIONARY[board_object.empty_spaces()]
+    piece_score += absolute_piece_factor * 100 * board.popcount(board_object.bitboard_black)
+    piece_score -= absolute_piece_factor * 100 * board.popcount(board_object.bitboard_white)
+
     # get the mobility score
     mobility_score = len(board_object.legal_moves()) - len(board_object.legal_moves(opponent=True))
 
     # get frontier score
     frontier_score = get_frontier_score(board_object.bitboard_black, board_object.bitboard_white)
 
-    return piece_score + MOBILITY_FACTOR * mobility_score + FRONTIER_FACTOR * frontier_score
+    return int(piece_score + MOBILITY_FACTOR * mobility_score + FRONTIER_FACTOR * frontier_score)
