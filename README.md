@@ -1,4 +1,4 @@
-# OthelloBot
+# othello-bot
 
 NOTE: I am fully aware that Python is not going to make a competitive bot. 
 This repository is simply a basis for testing new ideas.
